@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from starlette.background import BackgroundTasks
 
 from bot import models
+from bot.constants import HELP_MESSAGE
 from bot.db import SessionLocal, engine
 from bot.dintalk import DingTalk
 from bot.models import Conversation
@@ -32,7 +33,6 @@ def get_db():
 
 @app.post("/dingtalk/chat")
 def chat(message: DingtalkAskMessage, background_tasks: BackgroundTasks,session: Session = Depends(get_db)):
-    prompt = message.text.content.strip()
     background_tasks.add_task(ask_and_reply,session, message)
     return {"message": "Hello World"}
 
@@ -42,6 +42,10 @@ async def ask_and_reply(
     message: DingtalkAskMessage
 ):
     prompt = message.text.content.strip()
+
+    if prompt.lower() in ("", "帮助", "help"):
+        send_dingtalk(HELP_MESSAGE, message)
+        return
 
     if message.conversationType == ConversationTypeEnum.group:
         row = session.query(Conversation).filter_by(dingtalk_conversation=message.conversationId).first()
@@ -72,6 +76,10 @@ async def ask_and_reply(
         row.parent_conversation = resp.id
 
     content = resp.content
+
+    send_dingtalk(content,message)
+
+def send_dingtalk(content,message: DingtalkAskMessage):
     title = content[:12]
     payload: Dict[str, Any] = {"msgtype": "text"}
 
