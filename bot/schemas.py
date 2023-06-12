@@ -48,3 +48,8 @@ class DingtalkAskMessage(BaseModel):
     text: Text  # 文本消息
     msgtype: MessageTypeEnum  # 目前只支持text
     robotCode: Optional[str]  # 机器人code
+
+class ChatType(str, Enum):
+    dingtalk = "dingtalk"
+    dingtalk_group = "dingtalk_group"
+    wechat = "wechat"
