@@ -1,5 +1,3 @@
-from contextlib import contextmanager
-
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -12,14 +10,3 @@ engine = create_engine(
 SessionLocal = sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 Base = declarative_base()
-
-class SessionManager:
-    def __init__(self):
-        self.session = SessionLocal()
-
-    def __enter__(self):
-        return self.session
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.session.commit()
-        self.session.close()

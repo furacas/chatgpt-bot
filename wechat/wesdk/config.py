@@ -1,12 +1,14 @@
-#coding: utf-8
+# coding: utf-8
 
 import copy
+import importlib
 import re
 import sys
-import traceback
-import importlib
-import wesdk.minibots as minibots
 from collections.abc import Mapping
+
+from wechat import wesdk as minibots
+
+
 # rule_wrapper 根据规则, 对minibot函数进行封装
 def rule_wrapper(conf, bot_rule):
     rule = copy.deepcopy(bot_rule)
@@ -27,6 +29,7 @@ def rule_wrapper(conf, bot_rule):
     # 全局minibot映射
     if 'minibot' in rule:
         rule['minibot'] = conf['minibots'][rule['minibot']]
+
     def wrapped_bot(bot, msg):
         # OR ...
         pat_pass = False
@@ -55,20 +58,22 @@ def rule_wrapper(conf, bot_rule):
                             break
                 elif nickrule.search(msg['nickname']):
                     chat_rule_pass = True
-            
+
             if 'senderid' in chat_rule and msg['senderid'] in chat_rule['senderid']:
                 chat_rule_pass = True
             if 'roomid' in chat_rule and msg['roomid'] in chat_rule['roomid']:
                 chat_rule_pass = True
-            
+
             if not chat_rule_pass:
                 return False
-        
+
         if 'pattern-trim' in rule:
             msg['content'] = msg['content'][0:mt.span()[0]] + msg['content'][mt.span()[1]:]
         rule['minibot'](bot, msg)
         return True
+
     return wrapped_bot
+
 
 def deep_update(source, overrides):
     """
@@ -82,6 +87,8 @@ def deep_update(source, overrides):
         else:
             source[key] = overrides[key]
     return source
+
+
 # load_bots: 加载配置文件中定义的bot规则
 ## 返回minibot函数 combine(bot, msg)
 def load_bots(filepath, updates={}):
@@ -100,7 +107,7 @@ def load_bots(filepath, updates={}):
             if val['import'] not in imports:
                 imports[val['import']] = importlib.import_module(val['import'])
             imp = imports[val['import']]
-            conf['minibots'][key] = eval('imp.'+val['function'])
+            conf['minibots'][key] = eval('imp.' + val['function'])
         else:
             conf['minibots'][key] = eval(val['function'])
     # 预编译chat-rules规则
@@ -111,7 +118,7 @@ def load_bots(filepath, updates={}):
                     conf['chat-rules'][key]['nickname'][i] = re.compile(pat)
             else:
                 conf['chat-rules'][key]['nickname'] = re.compile(val['nickname'])
-    
+
     bots = []
     for i, bot_rule in enumerate(conf['reply-rules']):
         bots.append(rule_wrapper(conf, bot_rule))
