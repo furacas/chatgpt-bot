@@ -20,7 +20,7 @@ class DingTalkMessageHandler(MessageHandler):
 
 
 class DingTalkSender(Sender):
-    def send_response(self, content, message):
+    def send_response(self, content, message,**kwargs):
         title = content[:12]
         payload: Dict[str, Any] = {"msgtype": "text"}
         if message.conversationType == ConversationTypeEnum.group and message.senderStaffId:

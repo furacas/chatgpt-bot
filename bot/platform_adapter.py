@@ -14,7 +14,7 @@ class PlatformAdapter:
         self.message_handler = message_handler
         self.sender = sender
 
-    def process_message(self, message):
+    def process_message(self, message, **kwargs):
         prompt = self.message_handler.extract_prompt(message)
 
         if prompt.lower() in ("", "帮助", "help"):
@@ -43,6 +43,6 @@ class PlatformAdapter:
             row.gpt_conversation = resp.conversation_id
             row.parent_conversation = resp.id
 
-        self.sender.send_response(resp.content, message)
+        self.sender.send_response(resp.content, message, **kwargs)
         session.commit()
         session.close()
