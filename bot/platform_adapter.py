@@ -4,21 +4,23 @@ from bot.constants import HELP_MESSAGE
 from bot.db import SessionLocal
 from bot.message_handler import MessageHandler
 from bot.models import Conversation
-from bot.sender import Sender
 from chat.pandora_adapter import chatbot
 
 
 class PlatformAdapter:
 
-    def __init__(self, message_handler: MessageHandler, sender: Sender):
+    def __init__(self, message_handler: MessageHandler):
         self.message_handler = message_handler
-        self.sender = sender
 
     def process_message(self, message, **kwargs):
+
+        if not self.message_handler.should_handle_message(message):
+            return
+
         prompt = self.message_handler.extract_prompt(message)
 
         if prompt.lower() in ("", "帮助", "help"):
-            self.sender.send_response(HELP_MESSAGE, message)
+            self.sender.send_response(HELP_MESSAGE, message, **kwargs)
             return
 
         chat_id, chat_type = self.message_handler.extract_id_and_type(message)
@@ -43,6 +45,6 @@ class PlatformAdapter:
             row.gpt_conversation = resp.conversation_id
             row.parent_conversation = resp.id
 
-        self.sender.send_response(resp.content, message, **kwargs)
+        self.message_handler.send_response(resp.content, message, **kwargs)
         session.commit()
         session.close()

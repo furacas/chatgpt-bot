@@ -47,6 +47,7 @@ def run_wechat_bot():
             except:
                 print("start wechat bot fail will retry in 5 s")
                 pass
+            print('end start wechat bot')
         time.sleep(5)
 
 

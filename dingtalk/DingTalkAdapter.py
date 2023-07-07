@@ -4,7 +4,6 @@ import httpx
 
 from bot.message_handler import MessageHandler
 from bot.platform_adapter import PlatformAdapter
-from bot.sender import Sender
 from dingtalk.schemas import DingtalkAskMessage, ConversationTypeEnum, ChatType
 
 
@@ -18,8 +17,6 @@ class DingTalkMessageHandler(MessageHandler):
     def extract_prompt(self, message: DingtalkAskMessage):
         return message.text.content.strip()
 
-
-class DingTalkSender(Sender):
     def send_response(self, content, message,**kwargs):
         title = content[:12]
         payload: Dict[str, Any] = {"msgtype": "text"}
@@ -34,7 +31,7 @@ class DingTalkSender(Sender):
 
 class DingTalkAdapter(PlatformAdapter):
     def __init__(self):
-        super().__init__(DingTalkMessageHandler(), DingTalkSender())
+        super().__init__(DingTalkMessageHandler())
 
 
 dingtalk_adapter = DingTalkAdapter()
