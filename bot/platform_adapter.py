@@ -20,7 +20,7 @@ class PlatformAdapter:
         prompt = self.message_handler.extract_prompt(message)
 
         if prompt.lower() in ("", "帮助", "help"):
-            self.sender.send_response(HELP_MESSAGE, message, **kwargs)
+            self.message_handler.send_response(HELP_MESSAGE, message, **kwargs)
             return
 
         chat_id, chat_type = self.message_handler.extract_id_and_type(message)
@@ -30,6 +30,17 @@ class PlatformAdapter:
 
         conversation_id = row.gpt_conversation if row else ''
         parent_id = row.parent_conversation if row else str(uuid.uuid4())
+
+        if prompt.lower() in ("重置","reset"):
+            if row:
+                session.delete(row)
+                session.commit()
+                session.close()
+            if conversation_id:
+                chatbot.delete_conversation(conversation_id)
+
+            self.message_handler.send_response("重置成功", message, **kwargs)
+            return
 
         resp = chatbot.ask(prompt, conversation_id, parent_id)
 

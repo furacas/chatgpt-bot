@@ -31,5 +31,9 @@ class PandoraAdapter(ChatBotAdapter):
     def change_title(self, conversation_id, title):
         pass
 
+    def delete_conversation(self,conversation_id):
+        httpx.delete(PANDORA_SERVER_URL + '/api/conversation/' + conversation_id, timeout=60)
+
+
 
 chatbot = PandoraAdapter()
