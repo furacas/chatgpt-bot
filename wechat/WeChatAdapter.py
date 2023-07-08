@@ -48,6 +48,7 @@ def run_wechat_bot():
     WE_SERVICE = os.environ.get('WE_SERVICE')
 
     if not WE_SERVICE:
+        print('we chat bot not start because WE_SERVICE is empty')
         return
 
     while True:

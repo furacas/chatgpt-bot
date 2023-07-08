@@ -83,7 +83,10 @@ def run_qq_bot():
     QQ_SERVICE = os.environ.get('QQ_SERVICE')
 
     if not QQ_SERVICE:
+        print("qq bot not start since QQ_SERVICE is not set")
         return
+
+    print("start qq bot")
 
     session_key = bind_session()
 
