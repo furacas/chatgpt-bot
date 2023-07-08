@@ -6,6 +6,7 @@ ChatGPT聊天机器人
 
 - 钉钉机器人
 - 微信
+- QQ
 
 ## 安装步骤
 
@@ -15,5 +16,11 @@ ChatGPT聊天机器人
 docker run -p 8000:8000 --restart always --name chat -v ~/.app/chat/db:/app/db -e PANDORA_SERVER_URL=http://pandora:1024 -e WE_SERVICE=wechat_service furacas/chatgpt-bot:latest
 ```
 
-其中`PANDORA_SERVER_URL`可以参考 https://github.com/pengzhile/pandora  
-其中`WE_SERVICE`可以参考 https://github.com/ChisBread/wechat-service
+环境变量
+
+| 环境变量            | 是否可选     | 详情                                                                       |
+|-----------------|----------|--------------------------------------------------------------------------|
+| PANDORA_SERVER_URL | Required | [Pandora GitHub](https://github.com/pengzhile/pandora)                   |
+| WE_SERVICE      | Optional | [WeChat Service GitHub](https://github.com/ChisBread/wechat-service)     |
+| QQ_SERVICE      | Optional | [Mirai API HTTP GitHub](https://github.com/project-mirai/mirai-api-http) |
+| QQ_NUM          | Optional | Bot QQ号                                                                  |

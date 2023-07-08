@@ -54,3 +54,4 @@ class ChatType(str, Enum):
     dingtalk = "dingtalk"
     dingtalk_group = "dingtalk_group"
     wechat = "wechat"
+    qq = "qq"
