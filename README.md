@@ -13,7 +13,7 @@ ChatGPT聊天机器人
 ### Docker
 
 ```bash
-docker run -p 8000:8000 --restart always --name chat -v ~/.app/chat/db:/app/db -e PANDORA_SERVER_URL=http://pandora:1024 -e WE_SERVICE=wechat_service furacas/chatgpt-bot:latest
+docker run -p 8000:8000 --restart always --name chat -v ~/.app/chat/db:/app/db -e PANDORA_SERVER_URL=http://pandora:1024 furacas/chatgpt-bot:latest
 ```
 
 环境变量
