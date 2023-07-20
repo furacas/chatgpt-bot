@@ -8,9 +8,6 @@ from bot.db import engine
 from chat.pandora_adapter import PandoraAdapter
 from dingtalk.DingTalkAdapter import dingtalk_adapter
 from dingtalk.schemas import DingtalkAskMessage
-from wechat.WeChatAdapter import wechat_adapter
-from wechat.wesdk import logging, Bot
-from dingtalk.schemas import DingtalkAskMessage
 from qq.QQAdapter import run_qq_bot
 from wechat.WeChatAdapter import run_wechat_bot
 
