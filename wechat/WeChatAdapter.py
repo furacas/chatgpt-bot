@@ -1,8 +1,10 @@
 import os
+import time
 
 from bot.message_handler import MessageHandler
 from bot.platform_adapter import PlatformAdapter
 from dingtalk.schemas import ChatType
+from wechat.wesdk import Bot, logging
 
 
 class WeChatMessageHandler(MessageHandler):
@@ -38,3 +40,28 @@ class WeChatAdapter(PlatformAdapter):
 
 
 wechat_adapter = WeChatAdapter()
+
+
+def run_wechat_bot():
+    bot = None
+
+    WE_SERVICE = os.environ.get('WE_SERVICE')
+
+    if not WE_SERVICE:
+        print('we chat bot not start because WE_SERVICE is empty')
+        return
+
+    while True:
+        if not bot or not bot.is_alive():
+            print('start wechat bot')
+            try:
+                bot = Bot(ip=WE_SERVICE)
+                bot.register("on_open", lambda ws: logging("Connecting to WeChat service .."))
+                bot.register("on_close", lambda ws: logging("Byebye~"))
+                bot.register("recv_txt_msg", lambda msg: wechat_adapter.process_message(msg, bot=bot))
+                bot.start()
+            except:
+                print("start wechat bot fail will retry in 5 s")
+                pass
+            print('end start wechat bot')
+        time.sleep(5)
