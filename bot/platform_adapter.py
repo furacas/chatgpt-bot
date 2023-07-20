@@ -42,7 +42,7 @@ class PlatformAdapter:
             self.message_handler.send_response("重置成功", message, **kwargs)
             return
 
-        resp = chatbot.ask(prompt, conversation_id, parent_id)
+        resp = chatbot.ask(prompt, conversation_id, parent_id,**kwargs)
 
         if not row:
             row = Conversation(

@@ -10,10 +10,11 @@ PANDORA_SERVER_URL = os.environ.get('PANDORA_SERVER_URL') or "http://localhost:8
 
 
 class PandoraAdapter(ChatBotAdapter):
-    def ask(self, prompt, conversation_id, parent_id) -> AskResponse:
+    def ask(self, prompt, conversation_id, parent_id, **kwargs) -> AskResponse:
+        model = kwargs.get('model', 'gpt-3.5-turbo')
         data = {
             "prompt": prompt,
-            "model": "gpt-3.5-turbo",
+            "model": model,
             "message_id": str(uuid.uuid4()),
             "parent_message_id": parent_id,
             "conversation_id": conversation_id,
@@ -31,9 +32,8 @@ class PandoraAdapter(ChatBotAdapter):
     def change_title(self, conversation_id, title):
         pass
 
-    def delete_conversation(self,conversation_id):
+    def delete_conversation(self, conversation_id):
         httpx.delete(PANDORA_SERVER_URL + '/api/conversation/' + conversation_id, timeout=60)
-
 
 
 chatbot = PandoraAdapter()
