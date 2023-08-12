@@ -5,15 +5,12 @@ from starlette.background import BackgroundTasks
 
 from bot import models
 from bot.db import engine
-from chat.pandora_adapter import PandoraAdapter
 from dingtalk.DingTalkAdapter import dingtalk_adapter
 from dingtalk.schemas import DingtalkAskMessage
 from qq.QQAdapter import run_qq_bot
 from wechat.WeChatAdapter import run_wechat_bot
 
 app = FastAPI()
-
-chatbot = PandoraAdapter()
 
 models.Base.metadata.create_all(bind=engine)
 
