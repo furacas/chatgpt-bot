@@ -26,7 +26,8 @@ class DingTalkMessageHandler(MessageHandler):
 
         payload["text"] = {"title": f" {title}", "content": content}
 
-        httpx.post(message.sessionWebhook, json=payload)
+        resp = httpx.post(message.sessionWebhook, json=payload)
+        print(resp.content)
 
 
 class DingTalkAdapter(PlatformAdapter):
